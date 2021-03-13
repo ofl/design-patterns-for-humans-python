@@ -5,11 +5,11 @@ from abc import ABCMeta, abstractmethod
 
 class Door(metaclass=ABCMeta):
     @abstractmethod
-    def getWidth() -> float:
+    def get_width() -> float:
         pass
 
     @abstractmethod
-    def getHeight() -> float:
+    def get_height() -> float:
         pass
 
 
@@ -17,20 +17,19 @@ class WoodenDoor(Door):
     def __init__(self, width: float, height: float) -> None:
         self._width = width
         self._height = height
-        # super().__init__()
 
-    def getWidth(self) -> float:
+    def get_width(self) -> float:
         return self._width
 
-    def getHeight(self) -> float:
+    def get_height(self) -> float:
         return self._height
 
 
 class DoorFactory():
-    def makeDoor(width, height) -> Door:
+    def make_door(width, height) -> Door:
         return WoodenDoor(width, height)
 
 
-door = DoorFactory.makeDoor(100, 200)
-print(door.getWidth())
-print(door.getHeight())
+door = DoorFactory.make_door(100, 200)
+print(door.get_width())
+print(door.get_height())
