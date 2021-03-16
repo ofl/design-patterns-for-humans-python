@@ -37,6 +37,11 @@ class BurgerBuilder():
         return Burger(self)
 
 
-burger = BurgerBuilder(14).add_cheese().add_lettuce().add_pepperoni().build()
-print(burger.cheese)
+burger = BurgerBuilder(14)\
+    .add_cheese()\
+    .add_lettuce()\
+    .add_pepperoni()\
+    .build()
+
+print(burger.size)
 print(burger.pepperoni)
