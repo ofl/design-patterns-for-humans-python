@@ -1,4 +1,4 @@
-# Factory Method Pattern(https://github.com/kamranahmedse/design-patterns-for-humans)
+# Factory Method Pattern
 
 from abc import ABCMeta, abstractmethod
 
