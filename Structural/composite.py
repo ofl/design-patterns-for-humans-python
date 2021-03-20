@@ -1,4 +1,4 @@
-# Bridge Pattern
+# Composite Pattern
 
 from abc import ABCMeta, abstractmethod
 
