@@ -1,7 +1,5 @@
 # Prototype Pattern
 
-import copy
-
 
 class Sheep():
     def __init__(self, name: str, category='Mountain Sheep', color='white'):
@@ -33,8 +31,13 @@ print(original.get_name())
 print(original.get_category())
 print(original.get_color())
 
-cloned = copy.copy(original)
-cloned.set_name('Dolly')
+cloned = Sheep('Dolly')
+print(cloned.get_name())
+print(cloned.get_category())
+print(cloned.get_color())
+
+cloned.set_category(original.get_category())
+cloned.set_color(original.get_color())
 print(cloned.get_name())
 print(cloned.get_category())
 print(cloned.get_color())
