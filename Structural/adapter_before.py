@@ -35,14 +35,6 @@ class WildDog(Dog):
         print('ワオーン')
 
 
-class WildDogAdapter(Lion):
-    def __init__(self, dog: WildDog) -> None:
-        self._dog = dog
-
-    def roar(self):
-        self._dog.bark()
-
-
 hunter = Hunter()
 
 african_lion = AfricanLion()
@@ -52,5 +44,4 @@ asian_lion = AsianLion()
 hunter.hunt(asian_lion)
 
 wild_dog = WildDog()
-wild_dog_adapter = WildDogAdapter(wild_dog)
-hunter.hunt(wild_dog_adapter)
+hunter.hunt(wild_dog)  # => AttributeError
