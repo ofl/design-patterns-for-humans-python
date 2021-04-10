@@ -43,5 +43,8 @@ burger = BurgerBuilder(14)\
     .add_pepperoni()\
     .build()
 
-print(burger.size)
-print(burger.pepperoni)
+print('size: ' + str(burger.size))
+print('cheese: ' + str(burger.cheese))
+print('tomato: ' + str(burger.tomato))
+print('lettuce: ' + str(burger.lettuce))
+print('pepperoni: ' + str(burger.pepperoni))
