@@ -25,41 +25,47 @@ class AquaTheme(Theme):
 
 
 class WebPage(metaclass=ABCMeta):
-    def __init__(self, theme: Theme) -> None:
+    def __init__(self, theme_type: str) -> None:
         pass
 
     @abstractmethod
     def get_content():
         pass
 
+    def get_color(self) -> str:
+        if self._theme_type == 'dark':
+            return DarkTheme().get_color()
+        elif self._theme_type == 'light':
+            return LightTheme().get_color()
+        elif self._theme_type == 'aqua':
+            return AquaTheme().get_color()
+
 
 class About(WebPage):
-    def __init__(self, theme: Theme) -> None:
-        self._theme = theme
+    def __init__(self, theme_type: str) -> None:
+        self._theme_type = theme_type
 
     def get_content(self):
-        return "About page in " + self._theme.get_color()
+        return "About page in " + self.get_color()
 
 
 class Career(WebPage):
-    def __init__(self, theme: Theme) -> None:
-        self._theme = theme
+    def __init__(self, theme_type: str) -> None:
+        self._theme_type = theme_type
 
     def get_content(self):
-        return "Careers page in " + self._theme.get_color()
+        return "Careers page in " + self.get_color()
 
 
-light_theme = LightTheme()
-about = About(light_theme)
-careers = Career(light_theme)
+about = About('light')
+careers = Career('light')
 
 print(about.get_content())
 print(careers.get_content())
 
 
-dark_theme = DarkTheme()
-about = About(dark_theme)
-careers = Career(dark_theme)
+about = About('dark')
+careers = Career('dark')
 
 print(about.get_content())
 print(careers.get_content())
