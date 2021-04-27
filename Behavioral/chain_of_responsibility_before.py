@@ -8,17 +8,9 @@ class Account(metaclass=ABCMeta):
         self._balance = 0
         self._successor
 
-    def set_next(self, account):
-        self._successor = account
-
     def pay(self, amount_to_pay: float):
-        if self.can_pay(amount_to_pay):
-            print('Paid {0} using {1}'.format(
-                amount_to_pay, self.__class__.__name__))
-        elif hasattr(self, '_successor'):
-            self._successor.pay(amount_to_pay)
-        else:
-            raise Exception('None of the accounts have enough balance')
+        print('Paid {0} using {1}'.format(
+            amount_to_pay, self.__class__.__name__))
 
     def can_pay(self, amount: float) -> bool:
         return self._balance >= amount
@@ -43,12 +35,14 @@ bank = Bank(100)          # Bank with balance 100
 paypal = Paypal(200)      # Paypal with balance 200
 bitcoin = Bitcoin(300)    # Bitcoin with balance 300
 
-bank.set_next(paypal)
-paypal.set_next(bitcoin)
-
 # Let's try to pay using the first priority i.e. bank
-bank.pay(56)
+price = 350
 
-bank.pay(156)
-
-bank.pay(256)
+if bank.can_pay(price):
+    bank.pay(price)
+elif paypal.can_pay(price):
+    paypal.pay(price)
+elif bitcoin.can_pay(price):
+    bitcoin.pay(price)
+else:
+    raise Exception('None of the accounts have enough balance')
