@@ -20,6 +20,15 @@ class LabDoor(Door):
     def close(self):
         print('Closing lab door')
 
+    def secure_open(self, password):
+        if self._authenticate(password):
+            self.open()
+        else:
+            print('Big no! It ain\'t possible.')
+
+    def _authenticate(self, password: str) -> bool:
+        return password == '$ecr@t'
+
 
 class BackOfficeDoor(Door):
     def open(self):
@@ -28,36 +37,28 @@ class BackOfficeDoor(Door):
     def close(self):
         print('Closing back office door')
 
-
-class SecuredDoor(Door):
-    def __init__(self, door: Door) -> None:
-        self._door = door
-
-    def open(self, password: str):
+    def secure_open(self, password):
         if self._authenticate(password):
-            self._door.open()
+            self.open()
         else:
             print('Big no! It ain\'t possible.')
-
-    def close(self):
-        self._door.close()
 
     def _authenticate(self, password: str) -> bool:
         return password == '$ecr@t'
 
 
-door = SecuredDoor(LabDoor())
-door.open('invalid')  # Big no! It ain't possible.
+door = LabDoor()
+door.secure_open('invalid')  # Big no! It ain't possible.
 
-door.open('$ecr@t')  # Opening lab door
+door.secure_open('$ecr@t')  # Opening lab door
 door.close()  # Closing lab door
 
-# door.open()  # => TypeError
+door.open()  # Opening lab door
 
-door = SecuredDoor(BackOfficeDoor())
-door.open('invalid')  # Big no! It ain't possible.
+door = BackOfficeDoor()
+door.secure_open('invalid')  # Big no! It ain't possible.
 
-door.open('$ecr@t')  # Opening back office door
+door.secure_open('$ecr@t')  # Opening back office door
 door.close()  # Closing back office door
 
-# door.open()  # => TypeError
+door.open()  # Opening back office door
