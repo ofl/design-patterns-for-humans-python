@@ -3,12 +3,27 @@
 from abc import ABCMeta, abstractmethod
 
 
-class Bulb():
+class FloorLight():
     def turn_on(self):
-        print("Bulb has been lit")
+        print("フロアライトをつけた")
 
-    def turn_off(self):
-        print("Darkness")
+
+class TV():
+    def __init__(self) -> None:
+        self._channel = 1
+
+    def turn_on(self, channel: int):
+        self._channel = channel
+        print(f"テレビをつけて{self._channel}チャンネルにした")
+
+
+class AirConditioner():
+    def __init__(self) -> None:
+        self._temp = 24
+
+    def turn_on(self, temp: int):
+        self._temp = temp
+        print(f"エアコンをつけて{self._temp}度にした")
 
 
 class Command(metaclass=ABCMeta):
@@ -16,53 +31,53 @@ class Command(metaclass=ABCMeta):
     def execute(self):
         pass
 
-    @abstractmethod
-    def undo(self):
-        pass
 
-    @abstractmethod
-    def redo(self):
-        pass
-
-
-class TurnOn(Command):
-    def __init__(self, bulb: Bulb) -> None:
-        self._bulb = bulb
+class FloorLightCommand(Command):
+    def __init__(self, floor_light: FloorLight) -> None:
+        self._floor_light = floor_light
 
     def execute(self):
-        self._bulb.turn_on()
-
-    def undo(self):
-        self._bulb.turn_off()
-
-    def redo(self):
-        self.execute()
+        self._floor_light.turn_on()
 
 
-class TurnOff(Command):
-    def __init__(self, bulb: Bulb) -> None:
-        self._bulb = bulb
+class TVCommand(Command):
+    def __init__(self, tv: TV, channel: int) -> None:
+        self._tv = tv
+        self._channel = channel
 
     def execute(self):
-        self._bulb.turn_off()
-
-    def undo(self):
-        self._bulb.turn_on()
-
-    def redo(self):
-        self.execute()
+        self._tv.turn_on(self._channel)
 
 
-class RemoteControl():
-    def submit(self, command: Command):
-        command.execute()
+class AirConditionerCommand(Command):
+    def __init__(self, air_conditioner: AirConditioner, temp: int) -> None:
+        self._air_conditioner = air_conditioner
+        self._temp = temp
+
+    def execute(self):
+        self._air_conditioner.turn_on(self._temp)
 
 
-bulb = Bulb()
+class SmartSpeaker():
+    def __init__(self) -> None:
+        self._commands = []
 
-turn_on = TurnOn(bulb)
-turn_off = TurnOff(bulb)
+    def append_command(self, command: Command):
+        self._commands.append(command)
 
-remote = RemoteControl()
-remote.submit(turn_on)  # Bulb has been lit!
-remote.submit(turn_off)  # Darkness!
+    def good_morning(self):
+        print('おはよう')
+        for command in self._commands:
+            command.execute()
+
+
+floor_light = FloorLight()
+tv = TV()
+air_conditioner = AirConditioner()
+
+smart_speaker = SmartSpeaker()
+smart_speaker.append_command(FloorLightCommand(floor_light))
+smart_speaker.append_command(TVCommand(tv, 3))
+smart_speaker.append_command(AirConditionerCommand(air_conditioner, 20))
+
+smart_speaker.good_morning()
