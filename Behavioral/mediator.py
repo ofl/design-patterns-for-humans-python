@@ -2,39 +2,57 @@
 
 from abc import ABCMeta, abstractmethod
 
-import datetime
-
 
 class ChatMediator(metaclass=ABCMeta):
     @abstractmethod
-    def show_message(user, message: str):
+    def add_friend(self, user):
+        pass
+
+    @abstractmethod
+    def send_message(self, sender, message: str):
         pass
 
 
 class ChatRoom(ChatMediator):
-    def show_message(self, user, message: str):
-        now = datetime.datetime.now()
-        time = now.strftime('%m %d, %Y %H:%M')
-        sender = user.get_name()
-        print(f"{time}[{sender}]: {message}")
+    def __init__(self) -> None:
+        self._friends = []
+
+    def add_friend(self, user):
+        self._friends.append(user)
+
+    def send_message(self, sender, message: str):
+        for user in self._friends:
+            if user != sender:
+                print(f"[{user.name}]: {message}(by {sender.name})")
 
 
 class User():
-    def __init__(self, name: str, chat_mediator: ChatMediator) -> None:
-        self._name = name
-        self._chat_mediator = chat_mediator
+    def __init__(self, name: str) -> None:
+        self.name = name
 
-    def get_name(self):
-        return self._name
+    def send_message(self, chat_room: ChatRoom, message: str):
+        chat_room.send_message(self, message)
 
-    def send(self, message: str):
-        self._chat_mediator.show_message(self, message)
+    def receive_message(self, sender, message: str):
+        if self != sender:
+            print(f"[{self.name}]: {message}(by {sender.name})")
 
 
-mediator = ChatRoom()
+john = User('John')
+jane = User('Jane')
+jannet = User('Jannet')
 
-john = User('John Doe', mediator)
-jane = User('Jane Doe', mediator)
+chat_room = ChatRoom()
 
-john.send('Hi there!')
-jane.send('Hey!')
+chat_room.add_friend(john)
+chat_room.add_friend(jane)
+chat_room.add_friend(jannet)
+
+john.send_message(chat_room, 'Hello!')
+jane.send_message(chat_room, 'Hey!')
+
+# add new friend
+
+julian = User('Julian')
+chat_room.add_friend(julian)
+julian.send_message(chat_room, 'Hi there!')
