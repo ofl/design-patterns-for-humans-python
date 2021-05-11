@@ -1,11 +1,19 @@
 # Memento Pattern
 
+import datetime
+
+
 class EditorMemento():
     def __init__(self, content: str) -> None:
         self._content = content
+        now = datetime.datetime.now()
+        self._saved_at = now.strftime('%m %d, %Y %H:%M')
 
     def get_content(self):
         return self._content
+
+    def get_saved_at(self):
+        return self._saved_at
 
 
 class Editor():
@@ -23,6 +31,7 @@ class Editor():
 
     def restore(self, memento: EditorMemento):
         self._content = memento.get_content()
+        print(f'Restored {memento.get_saved_at()} data')
 
 
 editor = Editor()
