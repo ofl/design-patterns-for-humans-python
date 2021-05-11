@@ -41,16 +41,18 @@ janeDoe = JobSeeker('Jane Doe')
 jacksonDoe = JobSeeker('Jackson Doe')
 
 # Create publisher and attach subscribers
-job_postings = EmploymentAgency()
-job_postings.attach(johnDoe)
-job_postings.attach(janeDoe)
-job_postings.attach(jacksonDoe)
+job_seekers = []
+job_seekers.append(johnDoe)
+job_seekers.append(janeDoe)
+job_seekers.append(jacksonDoe)
 
 # Add a job and see if subscribers get notified
-job_postings.add_job(JobPost('Software Engineer'))
+for job_seeker in job_seekers:
+    job_seeker.on_job_poster(JobPost('Software Engineer'))
 
 # Jane removed
-job_postings.detach(janeDoe)
+job_seekers.remove(janeDoe)
 
 # Add a job and see if subscribers get notified
-job_postings.add_job(JobPost('Designer'))
+for job_seeker in job_seekers:
+    job_seeker.on_job_poster(JobPost('Designer'))
