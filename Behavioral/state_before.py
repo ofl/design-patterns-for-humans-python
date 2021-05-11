@@ -19,32 +19,40 @@ class LowerCase(WritingState):
         print(words.lower())
 
 
-class DefaultText(WritingState):
+class Default(WritingState):
     def write(self, words: str) -> str:
         print(words)
 
 
 class TextEditor():
-    def __init__(self, state: WritingState) -> None:
-        self._state = state
+    def __init__(self) -> None:
+        self._mode = 'default'
+        self._default = Default()
+        self._upper_case = UpperCase()
+        self._lower_case = LowerCase()
 
-    def set_state(self, state: WritingState):
-        self._state = state
+    def set_mode(self, mode: str):
+        self._mode = mode
 
     def type(self, words: str):
-        self._state.write(words)
+        if self._mode == 'upper_case':
+            self._upper_case.write(words)
+        elif self._mode == 'lower_case':
+            self._lower_case.write(words)
+        else:
+            self._default.write(words)
 
 
-editor = TextEditor(DefaultText())
+editor = TextEditor()
 
 editor.type('First line')
 
-editor.set_state(UpperCase())
+editor.set_mode('upper_case')
 
 editor.type('Second line')
 editor.type('Third line')
 
-editor.set_state(LowerCase())
+editor.set_mode('lower_case')
 
 editor.type('Fourth line')
 editor.type('Fifth line')
