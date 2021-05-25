@@ -3,71 +3,71 @@
 from abc import ABCMeta, abstractmethod
 
 
-class Door(metaclass=ABCMeta):
+class AbstractDoor(metaclass=ABCMeta):
     @abstractmethod
     def get_description(self) -> None:
         pass
 
 
-class WoodenDoor(Door):
+class ConcreteWoodenDoor(AbstractDoor):
     def get_description(self) -> None:
         print('I am a wooden door')
 
 
-class IronDoor(Door):
+class ConcreteIronDoor(AbstractDoor):
     def get_description(self) -> None:
         print('I am a iron door')
 
 
-class DoorFittingExpert(metaclass=ABCMeta):
+class AbstractDoorFactory(metaclass=ABCMeta):
     @abstractmethod
     def get_description(self) -> None:
         pass
 
 
-class Welder(DoorFittingExpert):
+class ConcreteFactoryWelder(AbstractDoorFactory):
     def get_description(self) -> None:
         print('I can only fit iron doors')
 
 
-class Carpenter(DoorFittingExpert):
+class ConcreteFactoryCarpenter(AbstractDoorFactory):
     def get_description(self) -> None:
         print('I can only fit wooden doors')
 
 
-class DoorFactory(metaclass=ABCMeta):
+class AbstractDoorFactory(metaclass=ABCMeta):
     @abstractmethod
-    def make_door(self) -> Door:
+    def make_door(self) -> AbstractDoor:
         pass
 
     @abstractmethod
-    def make_fitting_expert(self) -> DoorFittingExpert:
+    def make_fitting_expert(self) -> AbstractDoorFactory:
         pass
 
 
-class WoodenDoorFactory(DoorFactory):
-    def make_door(self) -> Door:
-        return WoodenDoor()
+class ConcreteWoodenDoorFactory(AbstractDoorFactory):
+    def make_door(self) -> AbstractDoor:
+        return ConcreteWoodenDoor()
 
-    def make_fitting_expert(self) -> DoorFittingExpert:
-        return Carpenter()
-
-
-class IronDoorFactory(DoorFactory):
-    def make_door(self) -> Door:
-        return IronDoor()
-
-    def make_fitting_expert(self) -> DoorFittingExpert:
-        return Welder()
+    def make_fitting_expert(self) -> AbstractDoorFactory:
+        return ConcreteFactoryCarpenter()
 
 
-wooden_factory = WoodenDoorFactory()
+class ConcreteIronDoorFactory(AbstractDoorFactory):
+    def make_door(self) -> AbstractDoor:
+        return ConcreteIronDoor()
+
+    def make_fitting_expert(self) -> AbstractDoorFactory:
+        return ConcreteFactoryWelder()
+
+
+wooden_factory = ConcreteWoodenDoorFactory()
 door = wooden_factory.make_door()
 expert = wooden_factory.make_fitting_expert()
 door.get_description()
 expert.get_description()
 
-iron_factory = IronDoorFactory()
+iron_factory = ConcreteIronDoorFactory()
 door = iron_factory.make_door()
 expert = iron_factory.make_fitting_expert()
 door.get_description()
