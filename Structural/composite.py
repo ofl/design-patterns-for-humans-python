@@ -3,87 +3,62 @@
 from abc import ABCMeta, abstractmethod
 
 
-class Employee(metaclass=ABCMeta):
+class TaskComponent(metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, name: str, salary: float) -> None:
-        pass
-
-    @abstractmethod
-    def get_name(self) -> str:
-        pass
-
-    @abstractmethod
-    def set_salary(self, salary):
-        pass
-
-    @abstractmethod
-    def get_salary(self) -> float:
-        pass
-
-    @abstractmethod
-    def get_roles(self) -> list:
+    def get_time_required(self) -> float:
         pass
 
 
-class Developer(Employee):
-    def __init__(self, name: str, salary: float) -> None:
-        self._name = name
-        self._salary = salary
-        self._roles = []
+class LeafTask(TaskComponent):
+    def __init__(self, name: str, time: float) -> None:
+        self.name = name
+        self._time = time
 
-    def get_name(self) -> str:
-        return self._name
-
-    def set_salary(self, salary):
-        self._salary = salary
-
-    def get_salary(self) -> str:
-        return self._salary
-
-    def get_roles(self) -> list:
-        return self._roles
+    def get_time_required(self):
+        return self._time
 
 
-class Designer(Employee):
-    def __init__(self, name: str, salary: float) -> None:
-        self._name = name
-        self._salary = salary
-        self._roles = []
+class CompositeTask(TaskComponent):
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self._sub_tasks = []
 
-    def get_name(self) -> str:
-        return self._name
+    def get_sub_tasks(self) -> list:
+        return self._sub_tasks
 
-    def set_salary(self, salary):
-        self._salary = salary
+    def add_sub_task(self, task: TaskComponent):
+        self._sub_tasks.append(task)
 
-    def get_salary(self) -> str:
-        return self._salary
+    def remove_sub_task(self, task: TaskComponent):
+        self._sub_tasks.remove(task)
 
-    def get_roles(self) -> list:
-        return self._roles
+    def get_time_required(self):
+        time = 0
 
+        for sub_task in self._sub_tasks:
+            time += sub_task.get_time_required()
 
-class Organization():
-    def __init__(self) -> None:
-        self._employees = []
-
-    def add_employee(self, employee: Employee):
-        self._employees.append(employee)
-
-    def get_net_salaries(self):
-        net_salary = 0
-
-        for employee in self._employees:
-            net_salary += employee.get_salary()
-
-        return net_salary
+        return time
 
 
-john = Developer('John Doe', 12000)
-jane = Designer('Jane Doe', 15000)
+cook = CompositeTask('カレーライスを作る')
 
-organization = Organization()
-organization.add_employee(john)
-organization.add_employee(jane)
+cook_curry = CompositeTask('カレーを作る')
+cook_curry.add_sub_task(LeafTask('材料を切る', 10))
+cook_curry.add_sub_task(LeafTask('玉ねぎを炒める', 10))
+cook_curry.add_sub_task(LeafTask('肉を炒める', 5))
+cook_curry.add_sub_task(LeafTask('煮る', 20))
 
-print(organization.get_net_salaries())
+cook_rice = CompositeTask('ご飯をたく')
+cook_rice.add_sub_task(LeafTask('お米をとぐ', 1))
+cook_rice.add_sub_task(LeafTask('炊飯器にかける', 60))
+
+serve = CompositeTask('盛り付ける')
+serve.add_sub_task(LeafTask('お皿にご飯をよそおう', 1))
+serve.add_sub_task(LeafTask('カレーをかける', 1))
+
+cook.add_sub_task(cook_curry)
+cook.add_sub_task(cook_rice)
+cook.add_sub_task(serve)
+
+print(cook.get_time_required())
