@@ -1,74 +1,73 @@
 # Abstract Factory Pattern
 
 from abc import ABCMeta, abstractmethod
+import random
 
 
-class Door(metaclass=ABCMeta):
+class AbstractProductX(metaclass=ABCMeta):
     @abstractmethod
     def get_description(self) -> None:
         pass
 
 
-class WoodenDoor(Door):
-    def get_description(self) -> None:
-        print('I am a wooden door')
-
-
-class IronDoor(Door):
-    def get_description(self) -> None:
-        print('I am a iron door')
-
-
-class DoorFittingExpert(metaclass=ABCMeta):
+class AbstractProductY(metaclass=ABCMeta):
     @abstractmethod
     def get_description(self) -> None:
         pass
 
 
-class Welder(DoorFittingExpert):
+class ConcreteProductX1(AbstractProductX):
     def get_description(self) -> None:
-        print('I can only fit iron doors')
+        print('I am a product X1')
 
 
-class Carpenter(DoorFittingExpert):
+class ConcreteProductX2(AbstractProductX):
     def get_description(self) -> None:
-        print('I can only fit wooden doors')
+        print('I am a product X2')
 
 
-class DoorFactory(metaclass=ABCMeta):
+class ConcreteProductY1(AbstractProductY):
+    def get_description(self) -> None:
+        print('I am a product Y1')
+
+
+class ConcreteProductY2(AbstractProductY):
+    def get_description(self) -> None:
+        print('I am a product Y2')
+
+
+class AbstractFactory(metaclass=ABCMeta):
     @abstractmethod
-    def make_door(self) -> Door:
+    def make_product_1(self) -> AbstractProductX:
         pass
 
     @abstractmethod
-    def make_fitting_expert(self) -> DoorFittingExpert:
+    def make_product_2(self) -> AbstractProductY:
         pass
 
 
-class WoodenDoorFactory(DoorFactory):
-    def make_door(self) -> Door:
-        return WoodenDoor()
+class ConcreteFactoryX(AbstractFactory):
+    def make_product_1(self) -> AbstractProductX:
+        return ConcreteProductX1()
 
-    def make_fitting_expert(self) -> DoorFittingExpert:
-        return Carpenter()
-
-
-class IronDoorFactory(DoorFactory):
-    def make_door(self) -> Door:
-        return IronDoor()
-
-    def make_fitting_expert(self) -> DoorFittingExpert:
-        return Welder()
+    def make_product_2(self) -> AbstractProductY:
+        return ConcreteProductY1()
 
 
-wooden_factory = WoodenDoorFactory()
-door = wooden_factory.make_door()
-expert = wooden_factory.make_fitting_expert()
-door.get_description()
-expert.get_description()
+class ConcreteFactoryY(AbstractFactory):
+    def make_product_1(self) -> AbstractProductX:
+        return ConcreteProductX2()
 
-iron_factory = IronDoorFactory()
-door = iron_factory.make_door()
-expert = iron_factory.make_fitting_expert()
-door.get_description()
-expert.get_description()
+    def make_product_2(self) -> AbstractProductY:
+        return ConcreteProductY2()
+
+
+if random.randint(1, 2) == 1:
+    factory = ConcreteFactoryX()
+else:
+    factory = ConcreteFactoryY()
+
+product_1 = factory.make_product_1()
+product_2 = factory.make_product_2()
+product_1.get_description()
+product_2.get_description()
