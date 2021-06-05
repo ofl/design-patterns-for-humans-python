@@ -1,6 +1,7 @@
 # Abstract Factory Pattern
 
 from abc import ABCMeta, abstractmethod
+import random
 
 
 class Door(metaclass=ABCMeta):
@@ -35,12 +36,12 @@ class Carpenter(DoorFittingExpert):
         print('I can only fit wooden doors')
 
 
-door = WoodenDoor()
-expert = Carpenter()
-door.get_description()
-expert.get_description()
+if random.randint(1, 2) == 1:
+    door = WoodenDoor()
+    expert = Carpenter()
+else:
+    door = IronDoor()
+    expert = Welder()
 
-door = IronDoor()
-expert = Welder()
 door.get_description()
 expert.get_description()
