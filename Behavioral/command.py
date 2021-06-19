@@ -1,83 +1,69 @@
-# Command Pattern
-
 from abc import ABCMeta, abstractmethod
 
 
-class FloorLight():
-    def turn_on(self):
-        print("フロアライトをつけた")
+class Invoker:
+    def __init__(self):
+        self._commands = []
 
+    def store_command(self, command):
+        self._commands.append(command)
 
-class TV():
-    def __init__(self) -> None:
-        self._channel = 1
-
-    def turn_on(self, channel: int):
-        self._channel = channel
-        print(f"テレビをつけて{self._channel}チャンネルにした")
-
-
-class AirConditioner():
-    def __init__(self) -> None:
-        self._temp = 24
-
-    def turn_on(self, temp: int):
-        self._temp = temp
-        print(f"エアコンをつけて{self._temp}度にした")
+    def execute_commands(self):
+        for command in self._commands:
+            command.execute()
 
 
 class Command(metaclass=ABCMeta):
+    def __init__(self, receiver):
+        self._receiver = receiver
+
     @abstractmethod
     def execute(self):
         pass
 
 
-class FloorLightCommand(Command):
-    def __init__(self, floor_light: FloorLight) -> None:
-        self._floor_light = floor_light
+class ConcreteCommand(Command):
+    def execute(self):
+        self._receiver.action()
+
+
+class ReceiverA:
+    def action(self):
+        print('receiver A action')
+
+
+class ReceiverB:
+    def action(self):
+        print('receiver B action')
+
+
+class ReceiverC:
+    def action(self):
+        print('receiver C action')
+
+
+class Client:
+    def __init__(self, invoker) -> None:
+        self.invoker = invoker
+
+    def set_up(self):
+        receiver_a = ReceiverA()
+        concrete_command_a = ConcreteCommand(receiver_a)
+        receiver_b = ReceiverB()
+        concrete_command_b = ConcreteCommand(receiver_b)
+        receiver_c = ReceiverC()
+        concrete_command_c = ConcreteCommand(receiver_c)
+
+        self.invoker.store_command(concrete_command_a)
+        self.invoker.store_command(concrete_command_b)
+        self.invoker.store_command(concrete_command_c)
 
     def execute(self):
-        self._floor_light.turn_on()
+        self.invoker.execute_commands()
 
 
-class TVCommand(Command):
-    def __init__(self, tv: TV, channel: int) -> None:
-        self._tv = tv
-        self._channel = channel
+invoker = Invoker()
+client = Client(invoker)
+client.set_up()
 
-    def execute(self):
-        self._tv.turn_on(self._channel)
-
-
-class AirConditionerCommand(Command):
-    def __init__(self, air_conditioner: AirConditioner, temp: int) -> None:
-        self._air_conditioner = air_conditioner
-        self._temp = temp
-
-    def execute(self):
-        self._air_conditioner.turn_on(self._temp)
-
-
-class SmartSpeaker():
-    def __init__(self) -> None:
-        self._commands = []
-
-    def append_command(self, command: Command):
-        self._commands.append(command)
-
-    def good_morning(self):
-        print('おはよう')
-        for command in self._commands:
-            command.execute()
-
-
-floor_light = FloorLight()
-tv = TV()
-air_conditioner = AirConditioner()
-
-smart_speaker = SmartSpeaker()
-smart_speaker.append_command(FloorLightCommand(floor_light))
-smart_speaker.append_command(TVCommand(tv, 3))
-smart_speaker.append_command(AirConditionerCommand(air_conditioner, 20))
-
-smart_speaker.good_morning()
+client.execute()
