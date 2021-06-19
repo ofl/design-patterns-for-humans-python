@@ -50,13 +50,24 @@ class SmartSpeaker():
                 device.turn_on()
 
 
-floor_light = FloorLight()
-tv = TV()
-air_conditioner = AirConditioner()
+class Human:
+    def __init__(self, smart_speaker) -> None:
+        self.smart_speaker = smart_speaker
+
+    def set_up_smart_speaker(self):
+        floor_light = FloorLight()
+        tv = TV()
+        air_conditioner = AirConditioner()
+
+        self.smart_speaker.append_device(floor_light)
+        self.smart_speaker.append_device(tv)
+        self.smart_speaker.append_device(air_conditioner)
+
+    def say_good_morning(self):
+        self.smart_speaker.good_morning(3, 20)
+
 
 smart_speaker = SmartSpeaker()
-smart_speaker.append_device(floor_light)
-smart_speaker.append_device(tv)
-smart_speaker.append_device(air_conditioner)
-
-smart_speaker.good_morning(3, 20)
+human = Human(smart_speaker)
+human.set_up_smart_speaker()
+human.say_good_morning()
